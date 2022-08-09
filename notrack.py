@@ -5,7 +5,27 @@
 #
 
 import pasteboard
+import difflib
 import time
+
+red = lambda text: f"\033[31m{text}\033[0m"
+green = lambda text: f"\033[32m{text}\033[0m"
+blue = lambda text: f"\033[34m{text}\033[0m"
+white = lambda text: f"\033[37m{text}\033[0m"
+
+def string_diff(old, new):
+    result = ""
+    codes = difflib.SequenceMatcher(a=old, b=new).get_opcodes()
+    for code in codes:
+        if code[0] == "equal": 
+            result += white(old[code[1]:code[2]])
+        elif code[0] == "delete":
+            result += red(old[code[1]:code[2]])
+        elif code[0] == "insert":
+            result += green(new[code[3]:code[4]])
+        elif code[0] == "replace":
+            result += (red(old[code[1]:code[2]]) + green(new[code[3]:code[4]]))
+    return result
 
 pb = pasteboard.Pasteboard()
 
@@ -25,6 +45,6 @@ while True:
         pb.set_contents(str)
     
     if str != orig:
-        print ("reset " + orig + " to " + str)
+        print(string_diff(orig, str))
 
     time.sleep (0.5)
