@@ -1,4 +1,8 @@
 #!/usr/bin/env python3
+#
+# A script to strip the tracking cookies from Twitter links in your clipboard.
+#
+
 import pasteboard
 import time
 
