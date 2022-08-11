@@ -31,7 +31,7 @@ pb = pasteboard.Pasteboard()
 
 while True:
     str = pb.get_contents()
-    if str is not None:
+    if str:
         orig = str
         if str.startswith('https://twitter.com/') and str.find('t=') != -1:
             str = str.split('?')[0]
@@ -44,7 +44,13 @@ while True:
             params = '&'.join(params)
             str = str.split('?')[0] + ('?' + params if len(params) > 0 else '')
             pb.set_contents(str)
-        
+
+        # Clean up those messy Amazon product URLs
+        if str.startswith('https://www.amazon.com/'):
+            str = str.split('?')[0]
+            str = str.split('ref=')[0]
+            pb.set_contents(str)
+
         if str != orig:
             print(string_diff(orig, str))
 
