@@ -30,12 +30,11 @@ def string_diff(old, new):
 pb = pasteboard.Pasteboard()
 
 while True:
-    str = pb.get_contents()
+    str = pb.get_contents(diff=True)
     if str:
         orig = str
         if str.startswith('https://twitter.com/') and str.find('t=') != -1:
             str = str.split('?')[0]
-            pb.set_contents(str)
 
         if str.startswith('http') and (str.find('utm_') != -1 or str.find('st=') != -1 or str.find('reflink') != -1):
             params = str.split('?')[1]
@@ -43,15 +42,14 @@ while True:
             params = [x for x in params if not x.startswith('utm_') and not x.startswith('reflink') and not x.startswith('st=')]
             params = '&'.join(params)
             str = str.split('?')[0] + ('?' + params if len(params) > 0 else '')
-            pb.set_contents(str)
 
         # Clean up those messy Amazon product URLs
         if str.startswith('https://www.amazon.com/'):
             str = str.split('?')[0]
             str = str.split('ref=')[0]
-            pb.set_contents(str)
 
         if str != orig:
             print(string_diff(orig, str))
+            pb.set_contents(str)
 
     time.sleep (0.5)
