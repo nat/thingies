@@ -36,11 +36,13 @@ while True:
         if str.startswith('https://twitter.com/') and str.find('t=') != -1:
             str = str.split('?')[0]
 
-        if str.startswith('http') and (str.find('utm_') != -1 or str.find('st=') != -1 or str.find('reflink') != -1 or str.find('ref_') != -1):
+        if str.startswith('http') and str.find('?') != -1:
             params = str.split('?')[1]
             params = params.split('&')
             params = [x for x in params if not x.startswith('utm_') and not x.startswith('reflink') and not x.startswith('st=')
                       and not x.startswith('ref_')]
+            # Kill the _r and _t params from tiktok
+            params = [x for x in params if not x.startswith('_r=') and not x.startswith('_t=')]
             params = '&'.join(params)
             str = str.split('?')[0] + ('?' + params if len(params) > 0 else '')
 
